@@ -117,6 +117,7 @@ bool StringsEditor::onMouse(const MouseEvent &event)
         int my = event.pos.getY();
         if (mx >= 0 && mx < w && my >= 0 && my < h) {
             fDragging = true;
+            fLastStringMouseEdited = -1;
             editStringByMouse(event.pos);
         }
     }
@@ -166,5 +167,24 @@ void StringsEditor::editStringByMouse(Point<int> pos)
 
     const float ratio = std::max(0.0f, std::min(1.0f, 1 - (float)pos.getY() / getHeight()));
     const float value = min + ratio * (max - min);
+
+    const int32_t prevStringNum = fLastStringMouseEdited;
+    fLastStringMouseEdited = stringNum;
+
+    if (prevStringNum != -1 && prevStringNum != stringNum) {
+        // interpolate intermediate strings
+        const float prevValue = fStringValues[prevStringNum];
+
+        const int32_t stringStep = (prevStringNum < stringNum) ? +1 : -1;
+        const int32_t stringDistance = std::abs(stringNum - prevStringNum);
+
+        for (int32_t i = 1; i < stringDistance; ++i) {
+            const float ratio = i * (1.0 / stringDistance);
+            setStringValue(
+                prevStringNum + i * stringStep,
+                ratio * prevValue + (1 - ratio) * value);
+        }
+    }
+
     setStringValue(stringNum, value);
 }

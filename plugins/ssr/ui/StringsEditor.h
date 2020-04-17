@@ -37,5 +37,6 @@ private:
     float fStringValueMin = 0.0;
     float fStringValueMax = 1.0;
     bool fDragging = false;
+    int32_t fLastStringMouseEdited = -1;
     Color fBarColor;
 };
