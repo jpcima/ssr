@@ -26,6 +26,7 @@
 #pragma once
 #include "Config.h"
 #include "LeakDetector.h"
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <memory>
