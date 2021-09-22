@@ -1,6 +1,7 @@
 #include "StringsEditor.h"
 #include "Window.hpp"
 #include "Cairo.hpp"
+#include <algorithm>
 
 StringsEditor::StringsEditor(Widget *group)
     : Widget(group),
