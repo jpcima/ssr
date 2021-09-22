@@ -6,6 +6,7 @@
 
 #include "ResonantArraySSE.h"
 #include "Config.h"
+#include <algorithm>
 #include <cstring>
 
 #if SFIZZ_CPU_FAMILY_X86_64 || SFIZZ_CPU_FAMILY_I386
