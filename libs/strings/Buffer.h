@@ -31,6 +31,7 @@
 #include <cstring>
 #include <memory>
 #include <type_traits>
+#include <algorithm>
 #include <utility>
 #include <atomic>
 
