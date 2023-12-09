@@ -1,13 +1,19 @@
-#include "Slider.h"
 #include "Window.hpp"
 #include "Cairo.hpp"
+#include "Slider.h"
 #include "ui/FontEngine.h"
 #include "ui/Geometry.h"
 #include "ui/Cairo++.h"
 
 ///
-Slider::Slider(Widget *group, FontEngine &fontEngine)
-    : Widget(group),
+Slider::Slider(TopLevelWidget* const parent, FontEngine &fontEngine)
+    : CairoSubWidget(parent),
+      fFontEngine(fontEngine)
+{
+}
+
+Slider::Slider(SubWidget* const parent, FontEngine &fontEngine)
+    : CairoSubWidget(parent),
       fFontEngine(fontEngine)
 {
 }
@@ -45,7 +51,7 @@ void Slider::setNumSteps(unsigned numSteps)
 bool Slider::onMouse(const MouseEvent &event)
 {
     DGL::Size<uint> wsize = getSize();
-    DGL::Point<int> mpos = event.pos;
+    DGL::Point<double> mpos = event.pos;
 
     if (!fIsDragging && event.press && event.button == 1) {
         bool insideX = mpos.getX() >= 0 && (unsigned)mpos.getX() < wsize.getWidth();
@@ -72,7 +78,7 @@ bool Slider::onMouse(const MouseEvent &event)
 bool Slider::onMotion(const MotionEvent &event)
 {
     DGL::Size<uint> wsize = getSize();
-    DGL::Point<int> mpos = event.pos;
+    DGL::Point<double> mpos = event.pos;
 
     if (fIsDragging) {
         double fill = mpos.getX() / (double)wsize.getWidth();
@@ -88,7 +94,7 @@ bool Slider::onMotion(const MotionEvent &event)
 bool Slider::onScroll(const ScrollEvent &event)
 {
     DGL::Size<uint> wsize = getSize();
-    DGL::Point<int> mpos = event.pos;
+    DGL::Point<double> mpos = event.pos;
 
     bool inside =
         mpos.getX() >= 0 && mpos.getY() >= 0 &&
@@ -103,9 +109,9 @@ bool Slider::onScroll(const ScrollEvent &event)
     return false;
 }
 
-void Slider::onDisplay()
+void Slider::onCairoDisplay(const CairoGraphicsContext& context)
 {
-    cairo_t *cr = getParentWindow().getGraphicsContext().cairo;
+    cairo_t* const cr = context.handle;
     FontEngine &fe = fFontEngine;
 
     //

@@ -1,10 +1,17 @@
-#include "StringsEditor.h"
+#include <algorithm>
 #include "Window.hpp"
 #include "Cairo.hpp"
-#include <algorithm>
+#include "StringsEditor.h"
 
-StringsEditor::StringsEditor(Widget *group)
-    : Widget(group),
+StringsEditor::StringsEditor(TopLevelWidget *group)
+    : CairoSubWidget(group),
+      fBarColor(0.95f, 0.45f, 0.0f)
+{
+    fStringValues.resize(88);
+}
+
+StringsEditor::StringsEditor(SubWidget *group)
+    : CairoSubWidget(group),
       fBarColor(0.95f, 0.45f, 0.0f)
 {
     fStringValues.resize(88);
@@ -65,9 +72,9 @@ void StringsEditor::setStringValueBounds(float min, float max)
     repaint();
 }
 
-void StringsEditor::onDisplay()
+void StringsEditor::onCairoDisplay(const CairoGraphicsContext& context)
 {
-    cairo_t *cr = getParentWindow().getGraphicsContext().cairo;
+    cairo_t* const cr = context.handle;
     cairo_save(cr);
 
     const int w = getWidth();
@@ -114,8 +121,8 @@ bool StringsEditor::onMouse(const MouseEvent &event)
     const int h = getHeight();
 
     if (event.button == 1 && event.press) {
-        int mx = event.pos.getX();
-        int my = event.pos.getY();
+        double mx = event.pos.getX();
+        double my = event.pos.getY();
         if (mx >= 0 && mx < w && my >= 0 && my < h) {
             fDragging = true;
             fLastStringMouseEdited = -1;
@@ -156,7 +163,7 @@ double StringsEditor::xPosToStringNum(double x) const
     return x / xsep - 1;
 }
 
-void StringsEditor::editStringByMouse(Point<int> pos)
+void StringsEditor::editStringByMouse(Point<double> pos)
 {
     int32_t stringNum = std::lrint(xPosToStringNum(pos.getX()));
     const uint32_t numStrings = fStringValues.size();

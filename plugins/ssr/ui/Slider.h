@@ -1,12 +1,13 @@
 #pragma once
-#include "Widget.hpp"
+#include "Cairo.hpp"
 #include <string>
 #include <functional>
 class FontEngine;
 
-class Slider : public Widget {
+class Slider : public CairoSubWidget {
 public:
-    Slider(Widget *group, FontEngine &fontEngine);
+    Slider(SubWidget* const parent, FontEngine &fontEngine);
+    Slider(TopLevelWidget* const parent, FontEngine &fontEngine);
 
     double value() const noexcept { return fValue; }
     void setValue(double value);
@@ -17,13 +18,14 @@ public:
     void setValueBounds(double v1, double v2);
     void setNumSteps(unsigned numSteps);
 
+    std::function<void(double)> ValueChangedCallback;
+    std::function<std::string(double)> FormatCallback;
+
+protected:
     bool onMouse(const MouseEvent &event) override;
     bool onMotion(const MotionEvent &event) override;
     bool onScroll(const ScrollEvent &event) override;
-    void onDisplay() override;
-
-    std::function<void(double)> ValueChangedCallback;
-    std::function<std::string(double)> FormatCallback;
+    void onCairoDisplay(const CairoGraphicsContext& context) override;
 
 private:
     double clampToBounds(double value);
