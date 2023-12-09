@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <memory>
 #include <cmath>
+#include <cstdint>
 
 cairo_surface_t *cairo_image_surface_create_from_png_data(const char *data, unsigned length);
 void cairo_set_source_rgba8(cairo_t *cr, ColorRGBA8 c);
