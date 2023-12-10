@@ -160,8 +160,7 @@ void StringsEditor::editStringByMouse(Point<int> pos)
 {
     int32_t stringNum = std::lrint(xPosToStringNum(pos.getX()));
     const uint32_t numStrings = fStringValues.size();
-
-    stringNum = std::min(numStrings, (uint32_t)std::max(0, stringNum));
+    stringNum = std::min(numStrings - 1, (uint32_t)std::max(0, stringNum));
 
     const float min = fStringValueMin;
     const float max = fStringValueMax;
