@@ -26,18 +26,15 @@ UIssr::UIssr()
     fFontEngine.reset(fe);
     fe->addFont("regular", fontRegular, sizeof(fontRegular));
 
-    StringsEditor *ed;
-
-    ed = makeSubwidget<StringsEditor>(this);
-    fGainEdit = ed;
-    ed->setAbsolutePos(20, 40);
-    ed->setSize(560, 120);
-    ed->setBarColor(Color(0.95f, 0.45f, 0.0f));
+    fGainEdit = new StringsEditor(this);
+    fGainEdit->setAbsolutePos(20, 40);
+    fGainEdit->setSize(560, 120);
+    fGainEdit->setBarColor(Color(0.95f, 0.45f, 0.0f));
     if (kGainsEditLogarithmic)
-        ed->setStringValueBounds(kGainMinDb, kGainMaxDb);
+        fGainEdit->setStringValueBounds(kGainMinDb, kGainMaxDb);
     else
-        ed->setStringValueBounds(gainLog2Lin(kGainMinDb), gainLog2Lin(kGainMaxDb));
-    ed->OnStringValueChanged = [this](uint32_t stringNum, float value) {
+        fGainEdit->setStringValueBounds(gainLog2Lin(kGainMinDb), gainLog2Lin(kGainMaxDb));
+    fGainEdit->OnStringValueChanged = [this](uint32_t stringNum, float value) {
         if (kGainsEditLogarithmic)
             fState->gains[stringNum] = gainLog2Lin(value);
         else
@@ -45,24 +42,20 @@ UIssr::UIssr()
         fMustResendState = true;
     };
 
-    ed = makeSubwidget<StringsEditor>(this);
-    fTimeEdit = ed;
-    ed->setAbsolutePos(20, 200);
-    ed->setSize(560, 120);
-    ed->setBarColor(Color(0.0f, 0.95f, 0.45f));
-    ed->setStringValueBounds(kFeedbackTimeMin, kFeedbackTimeMax);
-    ed->OnStringValueChanged = [this](uint32_t stringNum, float value) {
+    fTimeEdit = new StringsEditor(this);
+    fTimeEdit->setAbsolutePos(20, 200);
+    fTimeEdit->setSize(560, 120);
+    fTimeEdit->setBarColor(Color(0.0f, 0.95f, 0.45f));
+    fTimeEdit->setStringValueBounds(kFeedbackTimeMin, kFeedbackTimeMax);
+    fTimeEdit->OnStringValueChanged = [this](uint32_t stringNum, float value) {
         fState->feedbackTimes[stringNum] = value;
         fMustResendState = true;
     };
 
-    Slider *sl;
-
-    sl = makeSubwidget<Slider>(this, *fe);
-    fDepthSlider = sl;
-    sl->setAbsolutePos(20, 360);
-    sl->setSize(560, 20);
-    sl->ValueChangedCallback = [this](float value) {
+    fDepthSlider = new Slider(this, *fe);
+    fDepthSlider->setAbsolutePos(20, 360);
+    fDepthSlider->setSize(560, 20);
+    fDepthSlider->ValueChangedCallback = [this](float value) {
         setParameterValue(Pluginssr::pidSustainAmount, value);
     };
 
@@ -144,9 +137,9 @@ void UIssr::uiReshape(uint width, uint height)
 /**
   A function called to draw the view contents.
 */
-void UIssr::onDisplay()
+void UIssr::onCairoDisplay(const CairoGraphicsContext& context)
 {
-    cairo_t *cr = getParentWindow().getGraphicsContext().cairo;
+    cairo_t* const cr = context.handle;
 
     cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_paint(cr);
@@ -172,54 +165,6 @@ void UIssr::onDisplay()
         kAlignTopLeft|kAlignInside);
 }
 
-
-// -----------------------------------------------------------------------
-// Optional widget callbacks; return true to stop event propagation, false otherwise.
-
-/**
-  A function called when a key is pressed or released.
-*/
-bool UIssr::onKeyboard(const KeyboardEvent &ev)
-{
-    return false;
-    (void)ev;
-}
-
-/**
-  A function called when a special key is pressed or released.
-*/
-bool UIssr::onSpecial(const SpecialEvent &ev)
-{
-    return false;
-    (void)ev;
-}
-
-/**
-  A function called when a mouse button is pressed or released.
-*/
-bool UIssr::onMouse(const MouseEvent &ev)
-{
-    return false;
-    (void)ev;
-}
-
-/**
-  A function called when the mouse pointer moves.
-*/
-bool UIssr::onMotion(const MotionEvent &ev)
-{
-    return false;
-    (void)ev;
-}
-
-/**
-  A function called on scrolling (e.g. mouse wheel or track pad).
-*/
-bool UIssr::onScroll(const ScrollEvent &ev)
-{
-    return false;
-    (void)ev;
-}
 
 // -----------------------------------------------------------------------
 

@@ -2,8 +2,14 @@
 #include "Window.hpp"
 #include "Cairo.hpp"
 
-TextLabel::TextLabel(Widget *group, FontEngine &fontEngine)
-    : Widget(group),
+TextLabel::TextLabel(TopLevelWidget *group, FontEngine &fontEngine)
+    : CairoSubWidget(group),
+      fFontEngine(fontEngine)
+{
+}
+
+TextLabel::TextLabel(SubWidget *group, FontEngine &fontEngine)
+    : CairoSubWidget(group),
       fFontEngine(fontEngine)
 {
 }
@@ -35,9 +41,9 @@ void TextLabel::setAlignment(int align)
     repaint();
 }
 
-void TextLabel::onDisplay()
+void TextLabel::onCairoDisplay(const CairoGraphicsContext& context)
 {
-    cairo_t *cr = getParentWindow().getGraphicsContext().cairo;
+    cairo_t* const cr = context.handle;
     FontEngine &fe = fFontEngine;
 
     Rect box{0, 0, (int)getWidth(), (int)getHeight()};

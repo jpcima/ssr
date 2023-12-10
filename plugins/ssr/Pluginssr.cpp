@@ -52,7 +52,7 @@ void Pluginssr::initParameter(uint32_t index, Parameter &parameter)
         parameter.symbol = "depth";
         parameter.name = "Depth";
         parameter.ranges = ParameterRanges(1.0, 0.0, 1.0);
-        parameter.hints = kParameterIsAutomable|kParameterIsLogarithmic;
+        parameter.hints = kParameterIsAutomatable|kParameterIsLogarithmic;
         break;
     }
 }

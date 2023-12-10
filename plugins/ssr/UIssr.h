@@ -21,32 +21,17 @@ protected:
     void uiIdle() override;
     void uiReshape(uint width, uint height) override;
 
-    void onDisplay() override;
-
-    bool onKeyboard(const KeyboardEvent &ev) override;
-    bool onSpecial(const SpecialEvent &ev) override;
-    bool onMouse(const MouseEvent &ev) override;
-    bool onMotion(const MotionEvent &ev) override;
-    bool onScroll(const ScrollEvent &ev) override;
+    void onCairoDisplay(const CairoGraphicsContext& context) override;
 
 private:
     void updateUiState();
 
 private:
-    template <class W, class... A>
-    W *makeSubwidget(A &&... args)
-    {
-        W *w = new W(std::forward<A>(args)...);
-        fSubWidgets.push_back(std::unique_ptr<Widget>(w));
-        return w;
-    }
-
-    std::vector<std::unique_ptr<Widget>> fSubWidgets;
     std::unique_ptr<FontEngine> fFontEngine;
 
-    StringsEditor *fGainEdit = nullptr;
-    StringsEditor *fTimeEdit = nullptr;
-    Slider *fDepthSlider = nullptr;
+    ScopedPointer<StringsEditor> fGainEdit;
+    ScopedPointer<StringsEditor> fTimeEdit;
+    ScopedPointer<Slider> fDepthSlider;
 
     std::unique_ptr<SsrState> fState;
     bool fMustResendState = false;

@@ -1,10 +1,11 @@
 #pragma once
-#include "Widget.hpp"
+#include "Cairo.hpp"
 #include "ui/FontEngine.h"
 
-class TextLabel : public Widget {
+class TextLabel : public CairoSubWidget {
 public:
-    TextLabel(Widget *group, FontEngine &fontEngine);
+    TextLabel(TopLevelWidget *group, FontEngine &fontEngine);
+    TextLabel(SubWidget *group, FontEngine &fontEngine);
 
     const Font &font() const { return fFont; };
     void setFont(const Font &font);
@@ -16,7 +17,7 @@ public:
     void setAlignment(int align);
 
 protected:
-    void onDisplay() override;
+    void onCairoDisplay(const CairoGraphicsContext& context) override;
 
 private:
     FontEngine &fFontEngine;

@@ -14,6 +14,7 @@
 #define DISTRHO_PLUGIN_URI "http://jpcima.sdf1.org/plugins/ssr"
 
 #define DISTRHO_PLUGIN_HAS_UI 1
+#define DISTRHO_UI_USE_CAIRO 1
 #define DISTRHO_UI_USE_NANOVG 0
 
 #define DISTRHO_PLUGIN_IS_RT_SAFE 1

@@ -1,12 +1,13 @@
 #pragma once
-#include "Widget.hpp"
+#include "Cairo.hpp"
 #include "Color.hpp"
 #include <functional>
 #include <vector>
 
-class StringsEditor : public Widget {
+class StringsEditor : public CairoSubWidget {
 public:
-    explicit StringsEditor(Widget *group);
+    explicit StringsEditor(TopLevelWidget *group);
+    explicit StringsEditor(SubWidget *group);
 
     Color barColor() const { return fBarColor; }
     void setBarColor(Color color);
@@ -22,7 +23,7 @@ public:
     std::function<void(uint32_t, float)> OnStringValueChanged;
 
 protected:
-    void onDisplay() override;
+    void onCairoDisplay(const CairoGraphicsContext& context) override;
     bool onMouse(const MouseEvent &event) override;
     bool onMotion(const MotionEvent &event) override;
 
@@ -30,7 +31,7 @@ private:
     double stringNumToXPos(double s) const;
     double xPosToStringNum(double x) const;
 
-    void editStringByMouse(Point<int> pos);
+    void editStringByMouse(Point<double> pos);
 
 private:
     std::vector<float> fStringValues;
