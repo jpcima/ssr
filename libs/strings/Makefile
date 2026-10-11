@@ -12,6 +12,11 @@ STRINGS_SOURCES = \
 
 STRINGS_OBJS = $(patsubst %.cpp,../../build/strings/%.o,$(STRINGS_SOURCES))
 
+ifeq ($(CPU_I386_OR_X86_64),true)
+AVX_FLAGS = -mavx
+SSE_FLAGS = -msse
+endif
+
 all: $(STRINGS_LIB)
 
 clean:
@@ -25,12 +30,12 @@ $(STRINGS_LIB): $(STRINGS_OBJS)
 ../../build/strings/%AVX.o: %AVX.cpp
 	@mkdir -p $(dir $@)
 	@echo "Compiling $<"
-	$(SILENT)$(CXX) $< $(BUILD_CXX_FLAGS) -mavx -c -o $@
+	$(SILENT)$(CXX) $< $(BUILD_CXX_FLAGS) $(AVX_FLAGS) -c -o $@
 
 ../../build/strings/%SSE.o: %SSE.cpp
 	@mkdir -p $(dir $@)
 	@echo "Compiling $<"
-	$(SILENT)$(CXX) $< $(BUILD_CXX_FLAGS) -msse -c -o $@
+	$(SILENT)$(CXX) $< $(BUILD_CXX_FLAGS) $(SSE_FLAGS) -c -o $@
 
 ../../build/strings/%.o: %.cpp
 	@mkdir -p $(dir $@)
